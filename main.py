@@ -155,8 +155,18 @@ async def export_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_document(document=open(file_path, "rb"), filename="jawaban_siswa.xlsx")
     await update.message.reply_text("✅ Data jawaban berhasil diexport!")
 
+
 async def fallback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Silakan ketik /start untuk mulai atau ketik: kuis 1, kuis 2, kuis 3.")
+
+async def reset_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    telegram_id = update.message.from_user.id
+    conn = sqlite3.connect("siswa.db")
+    c = conn.cursor()
+    c.execute("DELETE FROM jawaban WHERE telegram_id = ?", (telegram_id,))
+    conn.commit()
+    conn.close()
+    await update.message.reply_text("✅ Jawabanmu berhasil direset!")
 
 def main():
     init_db()
@@ -178,9 +188,13 @@ def main():
 
     app.add_handler(conv_handler)
     app.add_handler(CommandHandler("export", export_jawaban))
+    app.add_handler(CommandHandler("reset_jawaban", reset_jawaban))
+
 
     print("✅ Bot Fiber Optik siap dijalankan...")
     app.run_polling()
 
 if __name__ == "__main__":
     main()
+
+
