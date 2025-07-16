@@ -7,7 +7,7 @@ from telegram.ext import (
 )
 from openpyxl import Workbook
 
-API_TOKEN = '7801526226:AAHBmBlK0NfabVywPKO2wsSWrdpjqhjnzH4'
+API_TOKEN = '7856614949:AAEW_mjqx9cg9DTmXAOUNeGklKAOCeC2z5E'
 
 NAMA, KUIS1, KUIS2, KUIS3 = range(4)
 
