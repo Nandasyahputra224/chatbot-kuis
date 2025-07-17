@@ -171,7 +171,7 @@ soal_kuis = {
         ("Dalam situasi apa kita menggunakan multi-mode?", " Cocok untuk jaringan jarak pendek, seperti jaringan LAN dalam gedung"),
         ("Sebutkan 3 aplikasi umum dari fiber optik!", "backbone jaringan, ftth, cctv, Industri medis, Komunikasi militer"),
         ("Alat apa yang digunakan untuk mengukur redaman fiber?", "otdr"),
-        ("Apa nama konektor kecil yang umum di sfp?", "lc"),
+        ("Apa nama konektor kecil yang umum di SFP(Small Form-factor Pluggable)?", "lc"),
     ]
 }
 
