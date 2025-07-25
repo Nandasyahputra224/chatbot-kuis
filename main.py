@@ -11,11 +11,10 @@ import re
 import pandas as pd
 import os
 
-API_TOKEN = '8063639769:AAE9CUsrTtJ14_l2YHaOvG4zbylRvA4IxBk'
-
+API_TOKEN = '8162265933:AAHOaD1fIfNgNWSlBB14c0JaEoOPXOyhOi0'
 NAMA, KUIS1, KUIS2, KUIS3 = range(4)
 
-# ======= DATABASE =======
+
 def init_db():
     conn = sqlite3.connect("siswa.db")
     c = conn.cursor()
@@ -41,9 +40,9 @@ def init_db():
     conn.close()
 
 
-# ======= START =======
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.user_data.get("materi_selesai"):
+        context.user_data.clear()
         await update.message.reply_text("Halo! Siapa nama lengkapmu?")
         return NAMA
     else:
@@ -58,7 +57,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return ConversationHandler.END
         
 
-# ======= SIMPAN NAMA SISWA =======
 async def simpan_nama(update: Update, context: ContextTypes.DEFAULT_TYPE):
     nama = update.message.text
     telegram_id = update.message.from_user.id
@@ -86,7 +84,7 @@ materi_dict = {
     "pertemuan 3": materi_3,
 }
 
-# ======= MATERI =======
+
 async def kirim_materi(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.lower()
     materi = materi_dict.get(text)
@@ -96,7 +94,8 @@ async def kirim_materi(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("Materi tidak ditemukan. Ketik: pertemuan 1, pertemuan 2, atau pertemuan 3.")
 
-# ======= KUIS =======
+
+
 async def mulai_kuis(update: Update, context: ContextTypes.DEFAULT_TYPE):
     pertemuan = update.message.text.strip().split()[-1]
     if pertemuan not in soal_kuis:
@@ -120,6 +119,8 @@ def bersihkan(text):
 
 def cek_kemiripan(jawaban_user, jawaban_benar, ambang=0.7):
     return SequenceMatcher(None, bersihkan(jawaban_user), bersihkan(jawaban_benar)).ratio() >= ambang
+
+
 
 async def proses_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     soal_list = context.user_data["soal_list"]
@@ -154,6 +155,11 @@ async def proses_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"✅ Kuis selesai! Skor kamu: {skor}/{len(soal_list)}")
         context.user_data.pop("materi_selesai", None)
         return ConversationHandler.END
+
+async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data.clear()
+    await update.message.reply_text("🔄 Chat berhasil di-restart. Ketik /start untuk memulai ulang.")
+
     
 async def reset_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     telegram_id = update.message.from_user.id
@@ -164,7 +170,8 @@ async def reset_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     conn.close()
     await update.message.reply_text("✅ Semua jawaban kamu berhasil dihapus!")
 
-# EXPORT JAWABAN KE EXCEL
+
+
 async def export_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     conn = sqlite3.connect("siswa.db")
     df = pd.read_sql_query("""
@@ -187,9 +194,9 @@ async def export_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def fallback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Silakan ketik /start untuk mulai atau ketik pertemuan 1/2/3.")
+    await update.message.reply_text("Perintah tidak dikenali. Gunakan /start atau ketik kuis pertemuan 1/2/3.")
 
-# ======= MAIN =======
+
 def main():
     init_db()
     app = ApplicationBuilder().token(API_TOKEN).build()
@@ -200,17 +207,35 @@ def main():
             MessageHandler(filters.Regex(r"^kuis pertemuan\s+[1-3]$"), mulai_kuis),
         ], 
         states={
-            NAMA: [MessageHandler(filters.TEXT & ~filters.COMMAND, simpan_nama)],
-            1: [MessageHandler(filters.TEXT & ~filters.COMMAND, proses_jawaban)],
-            2: [MessageHandler(filters.TEXT & ~filters.COMMAND, proses_jawaban)],
-            3: [MessageHandler(filters.TEXT & ~filters.COMMAND, proses_jawaban)],
+            NAMA: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, simpan_nama),  
+                CommandHandler("start", start),  
+                CommandHandler("restart", restart),
+            ],
+            1: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, proses_jawaban),  
+                CommandHandler("start", start),  
+                CommandHandler("restart", restart),
+            ],
+            2: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, proses_jawaban),  
+                CommandHandler("start", start),  
+                CommandHandler("restart", restart),
+            ],
+            3: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, proses_jawaban),  
+                CommandHandler("start", start), 
+                CommandHandler("restart", restart),
+            ],
         },
-        fallbacks=[MessageHandler(filters.COMMAND, fallback)],
+        fallbacks=[MessageHandler(filters.COMMAND & ~filters.Regex(r"^/restart$"), fallback)]
+
     )
 
     app.add_handler(conv_handler)
-    app.add_handler(CommandHandler("reset", reset_jawaban))
+    app.add_handler(CommandHandler("reset_jawaban", reset_jawaban))
     app.add_handler(CommandHandler("export", export_jawaban))
+    app.add_handler(CommandHandler("restart", restart))
     app.add_handler(MessageHandler(filters.Regex(r"(?i)^pertemuan\s*1$|^pertemuan\s*2$|^pertemuan\s*3$"), kirim_materi),)
     
     
