@@ -11,7 +11,7 @@ import re
 import pandas as pd
 import os
 
-API_TOKEN = '8162265933:AAHOaD1fIfNgNWSlBB14c0JaEoOPXOyhOi0'
+API_TOKEN = '8063639769:AAE9CUsrTtJ14_l2YHaOvG4zbylRvA4IxBk'
 NAMA, KUIS1, KUIS2, KUIS3 = range(4)
 
 
