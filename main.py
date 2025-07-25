@@ -69,7 +69,7 @@ async def simpan_nama(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f"Terima kasih, {nama}!\n\n"
         "💡 Pilih kuis yang ingin kamu kerjakan:\n"
-        "- Ketik *kuis pertemuan 1*\n"
+        "- Ketik *kuis pertemuan 1*\n" 
         "- Ketik *kuis pertemuan 2*\n"
         "- Ketik *kuis pertemuan 3*\n"
         "✍ Total Soal = 100 Butir",
@@ -204,7 +204,7 @@ def main():
     conv_handler = ConversationHandler(
         entry_points=[
             CommandHandler("start", start),
-            MessageHandler(filters.Regex(r"^kuis pertemuan\s+[1-3]$"), mulai_kuis),
+            MessageHandler(filters.Regex(r"(?i)^kuis pertemuan\s+[1-3]$"), mulai_kuis),
         ], 
         states={
             NAMA: [
