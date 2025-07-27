@@ -106,7 +106,6 @@ materi_func_dict = {
 async def kirim_materi(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.lower()
     materi_func = materi_func_dict.get(text)
-    # materi = materi_dict.get(text)
     if materi_func: 
         await materi_func(update, context) 
         context.user_data.clear()
@@ -252,7 +251,6 @@ async def pilih_materi(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def jawab_pertanyaan(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # user_id = update.effective_user.id
     jumlah_tanya = context.user_data.get("jumlah_tanya", 0)
 
     if jumlah_tanya >= MAX_PERTANYAAN:
@@ -261,7 +259,6 @@ async def jawab_pertanyaan(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     pertanyaan = update.message.text
     materi = context.user_data.get("materi_text", "")
-    # judul_materi = context.user_data.get("judul_materi", "materi ini")
 
     if not materi:
         await update.message.reply_text("❗ Materi belum dipilih. Gunakan /tanya untuk memilih materi.")
