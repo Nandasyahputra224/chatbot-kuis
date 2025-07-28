@@ -88,6 +88,15 @@ async def materi_3(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Teknologi ini tidak hanya digunakan dalam jaringan internet, tetapi juga di dunia medis, militer, dan keamanan.",
         parse_mode="Markdown"
     )
+    await update.message.reply_text(
+        "📝 *Soal Kuis* : \n\n"
+        "1. Apa perbedaan utama antara kabel fiber optik single-mode dan multi-mode dari segi ukuran inti dan jarak transmisi?\n"
+        "2. Dalam kondisi jaringan seperti apa kita lebih cocok menggunakan kabel fiber optik multi-mode dibanding single-mode?\n"
+        "3. Sebutkan tiga aplikasi umum dari kabel fiber optik dalam kehidupan sehari-hari atau industri!\n"
+        "4. Apa nama alat yang digunakan untuk mengukur tingkat redaman (loss) sinyal dalam kabel fiber optik?\n"
+        "5. Apa nama konektor kecil yang umum digunakan pada modul SFP (Small Form-factor Pluggable)?",
+        parse_mode="Markdown"
+    )
     context.user_data["materi_selesai"] = True
     await update.message.reply_text("✅ Setelah mempelajari materi, ketik /start untuk mulai kuis.")
     await update.message.reply_text("🤖 Tanya lebih lengkap tentang materi pertemuan?\nKetik /tanya untuk memilih materi dan bertanya.")

@@ -10,23 +10,25 @@ from src.materi.pertemuan_1 import get_materi_1_text
 from src.materi.pertemuan_2 import get_materi_2_text
 from src.materi.pertemuan_3 import get_materi_3_text
 from src.soal.soal import soal_kuis
+from utils.ai_helpers import safe_generate_content
 from dotenv import load_dotenv
 import re
 import pandas as pd
 import os
 import google.generativeai as genai
 
+
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API_KEY)
 API_TOKEN = os.getenv("API_TOKEN")
 
 NAMA, KUIS1, KUIS2, KUIS3 = range(4)
 STATE_PILIH_MATERI, STATE_TANYA_JAWAB = range(100, 102)
-
 MAX_PERTANYAAN = 120
 
+genai.configure(api_key=GEMINI_API_KEY)
+client = genai
 
 def init_db():
     conn = sqlite3.connect("siswa.db")
@@ -111,7 +113,7 @@ async def kirim_materi(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data.clear()
         context.user_data["materi_selesai"] = True
     else:
-        await update.message.reply_text("Materi tidak ditemukan. Ketik: pertemuan 1, pertemuan 2, atau pertemuan 3.")
+        await update.message.reply_text("❌ Materi tidak ditemukan. Ketik: pertemuan 1, pertemuan 2, atau pertemuan 3.")
 
 
 async def mulai_kuis(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -172,7 +174,6 @@ async def proses_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return ConversationHandler.END
 
 
-
 async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
     await update.message.reply_text("🔄 Chat berhasil di-restart. Ketik /start untuk memulai ulang.")
@@ -214,10 +215,9 @@ async def fallback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Perintah tidak dikenali. Gunakan /start atau ketik kuis pertemuan 1/2/3.")
 
 
-def jawab_gemini(prompt):
-    model = genai.GenerativeModel("models/gemini-1.5-flash")
-    response = model.generate_content(prompt)
-    return response.text
+def jawab_gemini(prompt=""):
+    response_text = safe_generate_content(genai, prompt)
+    return response_text
    
 
 async def tanya(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -237,7 +237,7 @@ async def pilih_materi(update: Update, context: ContextTypes.DEFAULT_TYPE):
     materi = materi_dict.get(pilih)
 
     if not materi:
-        await update.message.reply_text("❌ Materi tidak ditemukan. Pilih salah satu materi yang valid.")
+        await update.message.reply_text("❌ Materi tidak ada. Pilih salah satu materi valid yang terdapat pada opsi.")
         return ConversationHandler.END    
     
     context.user_data.clear()
@@ -339,7 +339,8 @@ def main():
                 CommandHandler("start", start),  
                 CommandHandler("restart", restart),
             ],
-            3: [
+            3: [ 
+                
                 MessageHandler(filters.TEXT & ~filters.COMMAND, proses_jawaban),  
                 CommandHandler("start", start), 
                 CommandHandler("restart", restart),

@@ -97,6 +97,15 @@ async def materi_1(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🔍 Pemilihan media harus mempertimbangkan: kebutuhan bandwidth, jarak transmisi, biaya, serta lingkungan operasional.",
         parse_mode="Markdown"
     )
+    await update.message.reply_text(
+        "📝 *Soal Kuis* : \n\n"
+        "1. Apa perbedaan utama antara media transmisi guided (terpandu) dan unguided (tidak terpandu) dalam jaringan komputer? Berikan contoh masing-masing!\n"
+        "2. Sebutkan dua kelebihan utama dari penggunaan kabel coaxial dalam jaringan komputer!\n"
+        "3. Mengapa kabel fiber optik dianggap sangat cocok untuk transmisi data jarak jauh dan kecepatan tinggi? Jelaskan alasannya!\n"
+        "4. Dari berbagai media transmisi, manakah yang paling tahan terhadap gangguan interferensi listrik? Jelaskan alasannya!\n"
+        "5. Apa kelemahan utama kabel UTP jika dibandingkan dengan kabel fiber optik dalam jaringan komputer?",
+        parse_mode="Markdown"
+    )
     context.user_data["materi_selesai"] = True
     await update.message.reply_text("✅ Setelah mempelajari materi, ketik /start untuk mulai kuis.")
     await update.message.reply_text("🤖 Tanya lebih lengkap tentang materi pertemuan?\nKetik /tanya untuk memilih materi dan bertanya.")

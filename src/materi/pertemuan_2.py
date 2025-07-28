@@ -98,6 +98,15 @@ async def materi_2(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "kita bisa lebih memahami mengapa fiber optik menjadi pilihan utama dalam pembangunan infrastruktur jaringan masa depan.",
         parse_mode="Markdown"
     )
+    await update.message.reply_text(
+        "📝 *Soal Kuis* : \n\n"
+        "1. Jelaskan fungsi bagian core dan cladding pada kabel fiber optik, serta bagaimana keduanya bekerja untuk mentransmisikan cahaya!\n"
+        "2. Apa yang dimaksud dengan prinsip pantulan total internal dalam fiber optik dan bagaimana syarat terjadinya?\n"
+        "3. Sebutkan dan jelaskan dua jenis sumber cahaya yang digunakan dalam transmisi sinyal pada kabel fiber optik!\n"
+        "4. Apa yang menyebabkan terjadinya bending loss pada kabel fiber optik dan bagaimana cara mencegahnya?\n"
+        "5. Sebutkan tiga keunggulan utama kabel fiber optik dibanding kabel tembaga dalam sistem jaringan!",
+        parse_mode="Markdown"
+    )
     context.user_data["materi_selesai"] = True
     await update.message.reply_text("✅ Setelah mempelajari materi, ketik /start untuk mulai kuis.")
     await update.message.reply_text("🤖 Tanya lebih lengkap tentang materi pertemuan?\nKetik /tanya untuk memilih materi dan bertanya.")
