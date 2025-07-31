@@ -62,7 +62,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return NAMA
     else:
         await update.message.reply_text(
-            "📘 Selamat datang di *Bot Pembelajaran Fiber Optik*!\n\n"
+            "Selamat datang di *Bot Pembelajaran Fiber Optik*!\n\n"
             "Gunakan kata kunci berikut untuk mengakses materi:\n"
             "- Ketik *pertemuan 1* - Media Transmisi\n"
             "- Ketik *pertemuan 2* - Struktur & Prinsip\n"
@@ -83,7 +83,7 @@ async def simpan_nama(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         f"Terima kasih, {nama}!\n\n"
-        "💡 Pilih kuis yang ingin kamu kerjakan:\n"
+        "Pilih kuis yang ingin kamu kerjakan:\n"
         "- Ketik *kuis pertemuan 1*\n" 
         "- Ketik *kuis pertemuan 2*\n"
         "- Ketik *kuis pertemuan 3*\n",
@@ -113,13 +113,13 @@ async def kirim_materi(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data.clear()
         context.user_data["materi_selesai"] = True
     else:
-        await update.message.reply_text("❌ Materi tidak ditemukan. Ketik: pertemuan 1, pertemuan 2, atau pertemuan 3.")
+        await update.message.reply_text("Materi tidak ditemukan. Ketik: pertemuan 1, pertemuan 2, atau pertemuan 3.")
 
 
 async def mulai_kuis(update: Update, context: ContextTypes.DEFAULT_TYPE):
     pertemuan = update.message.text.strip().split()[-1]
     if pertemuan not in soal_kuis:
-        await update.message.reply_text("❌ Pertemuan tidak valid. Ketik: kuis pertemuan 1, 2, atau 3.")
+        await update.message.reply_text("Pertemuan tidak valid. Ketik: kuis pertemuan 1, 2, atau 3.")
         return ConversationHandler.END
 
     context.user_data["soal_index"] = 0
@@ -127,7 +127,7 @@ async def mulai_kuis(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["soal_list"] = soal_kuis[pertemuan]
     context.user_data["pertemuan"] = pertemuan
 
-    await update.message.reply_text(f"📝 Kuis Pertemuan {pertemuan} dimulai!")
+    await update.message.reply_text(f"Kuis Pertemuan {pertemuan} dimulai!")
     await update.message.reply_text(soal_kuis[pertemuan][0][0])
     return int(pertemuan)
 
@@ -157,10 +157,10 @@ async def proses_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     conn.close()
 
     if benar:
-        await update.message.reply_text("✅ Benar!")
+        await update.message.reply_text("Benar!")
         context.user_data["skor"] += 1
     else:
-        await update.message.reply_text(f"❌ Salah. Jawaban benar: {kunci}")
+        await update.message.reply_text(f"Salah. Jawaban benar: {kunci}")
 
     index += 1
     if index < len(soal_list):
@@ -169,14 +169,14 @@ async def proses_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return int(pertemuan)
     else:
         skor = context.user_data["skor"]
-        await update.message.reply_text(f"✅ Kuis selesai! Skor kamu: {skor}/{len(soal_list)}")
+        await update.message.reply_text(f"Kuis selesai! Skor kamu: {skor}/{len(soal_list)}")
         context.user_data.pop("materi_selesai", None)
         return ConversationHandler.END
 
 
 async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
-    await update.message.reply_text("🔄 Chat berhasil di-restart. Ketik /start untuk memulai ulang.")
+    await update.message.reply_text("Chat berhasil di-restart. Ketik /start untuk memulai ulang.")
 
     
 async def reset_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -186,7 +186,7 @@ async def reset_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     c.execute("DELETE FROM jawaban WHERE telegram_id = ?", (telegram_id,))
     conn.commit()
     conn.close()
-    await update.message.reply_text("✅ Semua jawaban kamu berhasil dihapus!")
+    await update.message.reply_text("Semua jawaban kamu berhasil dihapus!")
 
 
 
@@ -201,7 +201,7 @@ async def export_jawaban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     conn.close()
 
     if df.empty:
-        await update.message.reply_text("📭 Belum ada data jawaban yang bisa diexport.")
+        await update.message.reply_text("Belum ada data jawaban yang bisa diexport.")
         return
 
     filename = "jawaban.xlsx"
@@ -224,7 +224,7 @@ async def tanya(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [["pertemuan 1", "pertemuan 2"],["pertemuan 3"]]
     reply_markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True)
     await update.message.reply_text(
-        "📚 Pilih materi yang ingin kamu tanyakan:\n"
+        "Pilih materi yang ingin kamu tanyakan:\n"
         "- Pertemuan 1 - Media Transmisi\n"
         "- Pertemuan 2 - Struktur & Prinsip\n"
         "- Pertemuan 3 - Jenis Fiber & Aplikasi"
@@ -237,16 +237,15 @@ async def pilih_materi(update: Update, context: ContextTypes.DEFAULT_TYPE):
     materi = materi_dict.get(pilih)
 
     if not materi:
-        await update.message.reply_text("❌ Materi tidak ada. Pilih salah satu materi valid yang terdapat pada opsi.")
+        await update.message.reply_text("Materi tidak ada. Pilih salah satu materi valid yang terdapat pada opsi.")
         return ConversationHandler.END    
     
     context.user_data.clear()
     context.user_data["materi_text"] = materi
-    # context.user_data["judul_materi"] = pilih
     context.user_data["jumlah_tanya"] = 0
 
 
-    await update.message.reply_text("📘 Silakan ajukan pertanyaan kamu seputar materi ini.")
+    await update.message.reply_text("Silakan ajukan pertanyaan kamu seputar materi ini.")
     return STATE_TANYA_JAWAB
 
 
@@ -254,14 +253,14 @@ async def jawab_pertanyaan(update: Update, context: ContextTypes.DEFAULT_TYPE):
     jumlah_tanya = context.user_data.get("jumlah_tanya", 0)
 
     if jumlah_tanya >= MAX_PERTANYAAN:
-        await update.message.reply_text("🚫 Kamu sudah mencapai batas maksimal 120 pertanyaan.")
+        await update.message.reply_text("Kamu sudah mencapai batas maksimal 120 pertanyaan.")
         return ConversationHandler.END 
     
     pertanyaan = update.message.text
     materi = context.user_data.get("materi_text", "")
 
     if not materi:
-        await update.message.reply_text("❗ Materi belum dipilih. Gunakan /tanya untuk memilih materi.")
+        await update.message.reply_text("Materi belum dipilih. Gunakan /tanya untuk memilih materi.")
         return ConversationHandler.END 
 
     prompt = f"""Berikut adalah materi pembelajaran:
