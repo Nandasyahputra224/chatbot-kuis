@@ -266,11 +266,14 @@ async def jawab_pertanyaan(update: Update, context: ContextTypes.DEFAULT_TYPE):
     prompt = f"""Berikut adalah materi pembelajaran:
     {materi}
 
-    Kamu berperan sebagai asisten pengajar. Jika ada pertanyaan yang **tidak relevan dengan materi**, jangan hanya menolaknya. Sebaliknya:
-    1. Jelaskan dengan sopan bahwa topik tersebut **tidak berkaitan langsung dengan materi** yang sedang dipelajari.
+    Kamu berperan sebagai asisten pengajar. Jika ada pertanyaan yang tidak relevan dengan materi, jangan hanya menolaknya. Sebaliknya:
+    1. Jelaskan dengan sopan bahwa topik tersebut tidak berkaitan langsung dengan materi yang sedang dipelajari.
     2. Berikan sedikit penjelasan tentang topik itu jika memungkinkan (misalnya pengertian atau konteks dasarnya).
-    3. Kemudian **arahkan kembali fokus** ke materi pembelajaran yang sesuai.
-    Berikan jawaban yang mengalir, edukatif, dan tetap menjaga konteks akademik.
+    3. Kemudian arahkan kembali fokus ke materi pembelajaran yang sesuai.
+
+    Berikan jawaban yang **mengalir, edukatif, dan tetap menjaga konteks akademik**. 
+    ⚠️ Jangan gunakan format Markdown seperti tanda bintang (*), garis miring (/), atau simbol lainnya dalam jawabanmu. Tulis dalam teks biasa saja.
+
     Jawablah pertanyaan berikut sesuai dengan instruksi ini:
     {pertanyaan}    
         """
